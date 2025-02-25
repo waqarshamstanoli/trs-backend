@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB:', err));
 
-app.use('/', routes);
+app.use('/api/', routes);
 
 
 app.use((err, req, res, next) => {
@@ -30,8 +30,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Server running at http://localhost:3000/');
+  console.log('Server running at http://localhost:3000/api');
 })
-
-
-// https://apkpure.com/textnow-call-text-unlimited/com.enflick.android.TextNow/downloading
