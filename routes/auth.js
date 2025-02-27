@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
         const secretKey = 'p9c025YrTAcDeKWX277O1ihxSYjOQfNS';
         const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '1h' });
 
-        res.json({ message: 'Login successful', token, userId: user._id });
+        res.json({ message: 'Login successful', token, user: user });
 
     } catch (error) {
         console.error('Error during login:', error);
@@ -67,9 +67,9 @@ router.post('/login', async (req, res) => {
 
  
   router.post("/register", async (req, res) => {
-    const { email, password, c_password } = req.body;
+    const { email, password, c_password, userName } = req.body;
   
-    if (!email || !password || !c_password) {
+    if (!email || !password || !c_password || !userName) {
       return res.status(400).json({ message: "All fields are required" });
     }
   
@@ -87,11 +87,13 @@ router.post('/login', async (req, res) => {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
   
-      // Create user but keep email unverified
+      const role = email === 'waqar.shamstanoli@gmail.com' ? 'admin' : 'user';
       const newUser = new User({
         email,
         password: hashedPassword,
-        isVerified: false, // Add a field in your model to track verification
+        role,
+        userName,
+        isVerified: false, 
       });
   
       await newUser.save();
@@ -123,7 +125,7 @@ router.post('/login', async (req, res) => {
     }
   });
   
-  // 🟢 Verify Email Route
+  // Verify Email Route
   router.get("/verify-email/:token", async (req, res) => {
     try {
       const { token } = req.params;
